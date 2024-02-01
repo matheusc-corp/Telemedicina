@@ -83,6 +83,33 @@ namespace CRUD_Telemedicina.Controllers
             return Ok(cliente);
         }
 
+        [HttpPut("alterar")]
+        public IActionResult AlterarCliente(int id, ClienteModel cliente)
+        {
+            var clienteBanco = _context.Clientes.Find(id);
+
+            if (clienteBanco == null)
+                return NotFound("Paciente não encontrado");
+
+            if (_context.Clientes.Where(x => x.Email == cliente.Email).Any())
+                return BadRequest("Paciente já cadastrado com este email");
+
+            if (_context.Clientes.Where(x => x.Telefone == cliente.Telefone).Any())
+                return BadRequest("Paciente já cadastrado com este telefone");
+
+            clienteBanco.Nome = cliente.Nome;
+            clienteBanco.Email = cliente.Email;
+            clienteBanco.DataNascimento = cliente.DataNascimento;
+            clienteBanco.Email = cliente.Email;
+            clienteBanco.Telefone = cliente.Telefone;
+            clienteBanco.DataAtualizacao = DateTime.UtcNow;
+
+            _context.Update(cliente);
+            _context.SaveChanges();
+
+            return Ok(clienteBanco);
+        }
+
         [HttpPut("desativar")]
         public IActionResult DesativarCliente(int id)
         {
@@ -92,6 +119,25 @@ namespace CRUD_Telemedicina.Controllers
                 return NotFound("Paciente não encontrado");
 
             cliente.Status = StatusPaciente.Cancelado;
+            cliente.DataAtualizacao = DateTime.UtcNow;
+            cliente.DataCancelamento = null;
+            _context.Update(cliente);
+            _context.SaveChanges();
+
+            return Ok(cliente);
+        }
+
+        [HttpPut("ativar")]
+        public IActionResult AtivarCliente(int id)
+        {
+            var cliente = _context.Clientes.Find(id);
+
+            if (cliente == null)
+                return NotFound("Paciente não encontrado");
+
+            cliente.Status = StatusPaciente.Ativo;
+            cliente.DataAtualizacao = DateTime.UtcNow;
+            cliente.DataCancelamento = DateTime.UtcNow;
             _context.Update(cliente);
             _context.SaveChanges();
 
