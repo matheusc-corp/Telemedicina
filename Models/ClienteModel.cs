@@ -2,7 +2,7 @@
 {
     public class ClienteModel
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public DateTime DataCadastro { get; set; }
         public string Nome { get; set; }
         public string Cpf { get; set; }
