@@ -1,0 +1,6 @@
+@CRUD_Telemedicina_HostAddress = http://localhost:5211
+
+GET {{CRUD_Telemedicina_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
